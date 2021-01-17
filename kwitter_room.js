@@ -14,7 +14,7 @@ var firebaseConfig = {
     firebase.initializeApp(firebaseConfig);
 
     user_name = localStorage.getItem("username_key");
-    document.getElementById("user_name").innerHTML = "Welcome " + user_name;
+    document.getElementById("user_name").innerHTML = "Welcome " + user_name + "!";
     function addRoom() {
           room_name = document.getElementById("add_room").value;
           localStorage.setItem("roomname_key", room_name);
@@ -25,10 +25,32 @@ var firebaseConfig = {
     }
 
 
-function getData() {firebase.database().ref("/").on('value', function(snapshot) {document.getElementById("output").innerHTML = "";snapshot.forEach(function(childSnapshot) {childKey  = childSnapshot.key;
-       Room_names = childKey;
+function getData() {
+      firebase.database().ref("/").on('value', function(snapshot) {
+            document.getElementById("output").innerHTML = "";
+            snapshot.forEach(function(childSnapshot) {
+                  childKey  = childSnapshot.key;
+                  Room_names = childKey;
       //Start code
-
+                  console.log("room names - " + Room_names);
+                  row = "<div class='room_name' id='"+Room_names+"' onclick='goToRoomName(this.id)'> #"+Room_names+" </div> <hr>";
+                  document.getElementById("output").innerHTML += row;
       //End code
-      });});}
+            });
+      });
+}
+
 getData();
+
+function goToRoomName(last_room) {
+      console.log("we are currently on " + last_room);
+      localStorage.setItem("roomname_key", last_room);
+      window.location = "kwitter_page.html";
+}
+
+function logOut() {
+      localStorage.removeItem("username_key");
+      localStorage.removeItem("roomname_key");
+      window.location = "index.html";
+      console.log("You have logged out successfully.");
+}
